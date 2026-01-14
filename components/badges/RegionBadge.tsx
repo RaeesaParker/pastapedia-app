@@ -50,8 +50,8 @@ const styles = StyleSheet.create({
     borderWidth: 1,
   },
   badgeSmall: {
-    paddingVertical: 2,
-    paddingHorizontal: Spacing.xs,
+    paddingVertical: Spacing.xs / 2,
+    paddingHorizontal: Spacing.sm,
   },
   text: {
     fontSize: FontSize.xs,

@@ -43,7 +43,7 @@ const styles = StyleSheet.create({
     marginBottom: Spacing.md,
   },
   sectionTitle: {
-    fontSize: FontSize["2xl"],
+    fontSize: FontSize.xl,
     fontFamily: FontFamily.primary.bold,
   },
   horizontalList: {

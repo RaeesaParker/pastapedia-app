@@ -9,6 +9,8 @@ import { Spacing, FontSize, FontFamily } from "../../constants";
 import { PASTA_DATABASE } from "../../data/pastaData";
 import ProgressWidget from "../../components/features/home/ProgressWidget";
 import RecentlyMadeWidget from "../../components/features/home/RecentlyMadeWidget";
+import FeaturedPastaWidget from "../../components/features/home/FeaturedPastaWidget";
+import { Pasta } from "../../types";
 
 export default function HomeScreen() {
   const router = useRouter();
@@ -21,7 +23,7 @@ export default function HomeScreen() {
       progressEntries
         .slice(0, 5)
         .map((entry) => PASTA_DATABASE.find((p) => p.id === entry.pastaId))
-        .filter((pasta): pasta is NonNullable<typeof pasta> => pasta != null) || []
+        .filter((pasta): pasta is Pasta => pasta != null) || []
     );
   }, [progressEntries]);
 
@@ -36,6 +38,8 @@ export default function HomeScreen() {
           </Text>
         </View>
 
+        <FeaturedPastaWidget />
+
         <ProgressWidget />
 
         {recentlyMade.length > 0 ? (
@@ -44,12 +48,15 @@ export default function HomeScreen() {
 
         {/* Explore Section */}
         <View style={styles.section}>
-          <Text style={[styles.sectionTitle, { color: colors.text }]}>
-            Explore Pasta Shapes
-          </Text>
           <Button
             title="Browse All Shapes"
             onPress={() => router.push("/browse" as any)}
+            fullWidth
+          />
+          <Button
+            title="View My Collection"
+            onPress={() => router.push("/progress" as any)}
+            variant="outline"
             fullWidth
           />
         </View>
@@ -133,6 +140,9 @@ const styles = StyleSheet.create({
   },
   section: {
     marginBottom: Spacing.xl,
+    paddingLeft: Spacing.lg,
+    paddingRight: Spacing.lg,
+    gap: Spacing.md,
   },
   sectionHeader: {
     flexDirection: "row",
