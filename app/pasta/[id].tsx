@@ -7,6 +7,7 @@ import { useTheme } from '../../hooks/useTheme';
 import { usePastaById } from '../../hooks/usePasta';
 import { useIsCompleted, useProgress } from '../../hooks/useProgress';
 import { DifficultyBadge } from '../../components/badges/DifficultyBadge';
+import { RegionBadge } from '../../components/badges/RegionBadge';
 import { Button } from '../../components/buttons/Button';
 import { Ionicons } from '@expo/vector-icons';
 import { Spacing, FontSize, FontFamily, IconSize } from '../../constants';
@@ -65,12 +66,7 @@ export default function PastaDetailScreen() {
 
             <View style={styles.tags}>
               <DifficultyBadge difficulty={pasta.difficulty} />
-              <View style={[styles.regionTag, { backgroundColor: colors.cardElevated, borderColor: colors.border }]}>
-                <Ionicons name="location-outline" size={16} color={colors.primary} />
-                <Text style={[styles.regionText, { color: colors.textSecondary }]}>
-                  {pasta.region}
-                </Text>
-              </View>
+              <RegionBadge region={pasta.region} />
             </View>
           </View>
 

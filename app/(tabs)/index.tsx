@@ -1,27 +1,29 @@
 import React from "react";
-import { View, Text, StyleSheet, FlatList } from "react-native";
+import { View, Text, StyleSheet } from "react-native";
 import { useRouter } from "expo-router";
 import { Screen } from "../../components/layout/Screen";
-import { PastaCard } from "../../components/cards/PastaCard";
 import { Button } from "../../components/buttons/Button";
 import { useTheme } from "../../hooks/useTheme";
-import { useProgress, useStats } from "../../hooks/useProgress";
-import { usePasta } from "../../hooks/usePasta";
+import { useProgress } from "../../hooks/useProgress";
 import { Spacing, FontSize, FontFamily } from "../../constants";
 import { PASTA_DATABASE } from "../../data/pastaData";
 import ProgressWidget from "../../components/features/home/ProgressWidget";
+import RecentlyMadeWidget from "../../components/features/home/RecentlyMadeWidget";
 
 export default function HomeScreen() {
   const router = useRouter();
   const { colors } = useTheme();
-  const stats = useStats();
   const { progressEntries } = useProgress();
 
   // Get recently completed pastas
-  const recentlyMade = progressEntries
-    .slice(0, 5)
-    .map((entry) => PASTA_DATABASE.find((p) => p.id === entry.pastaId))
-    .filter(Boolean);
+  const recentlyMade = React.useMemo(() => {
+    return (
+      progressEntries
+        .slice(0, 5)
+        .map((entry) => PASTA_DATABASE.find((p) => p.id === entry.pastaId))
+        .filter((pasta): pasta is NonNullable<typeof pasta> => pasta != null) || []
+    );
+  }, [progressEntries]);
 
   return (
     <Screen>
@@ -36,24 +38,9 @@ export default function HomeScreen() {
 
         <ProgressWidget />
 
-        {/* Recently Made Section */}
-        {recentlyMade.length > 0 && (
-          <View style={styles.section}>
-            <View style={styles.sectionHeader}>
-              <Text style={[styles.sectionTitle, { color: colors.text }]}>
-                Recently Made
-              </Text>
-            </View>
-            <FlatList
-              horizontal
-              data={recentlyMade}
-              renderItem={({ item }) => item && <PastaCard pasta={item} />}
-              keyExtractor={(item) => item?.id || ""}
-              showsHorizontalScrollIndicator={false}
-              contentContainerStyle={styles.horizontalList}
-            />
-          </View>
-        )}
+        {recentlyMade.length > 0 ? (
+          <RecentlyMadeWidget recentlyMade={recentlyMade} />
+        ) : null}
 
         {/* Explore Section */}
         <View style={styles.section}>

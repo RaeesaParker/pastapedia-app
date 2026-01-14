@@ -1,14 +1,28 @@
-import React from 'react';
-import { View, Text, Image, TouchableOpacity, StyleSheet, Dimensions } from 'react-native';
-import { useRouter } from 'expo-router';
-import { Pasta } from '../../types';
-import { useTheme } from '../../hooks/useTheme';
-import { useIsCompleted } from '../../hooks/useProgress';
-import { DifficultyBadge } from '../badges/DifficultyBadge';
-import { BorderRadius, Spacing, FontSize, FontFamily, Shadow } from '../../constants';
-import { Ionicons } from '@expo/vector-icons';
+import React from "react";
+import {
+  View,
+  Text,
+  Image,
+  TouchableOpacity,
+  StyleSheet,
+  Dimensions,
+} from "react-native";
+import { useRouter } from "expo-router";
+import { Pasta } from "../../types";
+import { useTheme } from "../../hooks/useTheme";
+import { useIsCompleted } from "../../hooks/useProgress";
+import { DifficultyBadge } from "../badges/DifficultyBadge";
+import { RegionBadge } from "../badges/RegionBadge";
+import {
+  BorderRadius,
+  Spacing,
+  FontSize,
+  FontFamily,
+  Shadow,
+} from "../../constants";
+import { Ionicons } from "@expo/vector-icons";
 
-const CARD_WIDTH = (Dimensions.get('window').width - Spacing.md * 3) / 2;
+const CARD_WIDTH = (Dimensions.get("window").width - Spacing.md * 3) / 2.5;
 
 interface PastaCardProps {
   pasta: Pasta;
@@ -32,7 +46,9 @@ export function PastaCard({ pasta }: PastaCardProps) {
           resizeMode="cover"
         />
         {isCompleted && (
-          <View style={[styles.completedBadge, { backgroundColor: colors.success }]}>
+          <View
+            style={[styles.completedBadge, { backgroundColor: colors.success }]}
+          >
             <Ionicons name="checkmark" size={16} color="#FFFFFF" />
           </View>
         )}
@@ -42,11 +58,10 @@ export function PastaCard({ pasta }: PastaCardProps) {
         <Text style={[styles.name, { color: colors.text }]} numberOfLines={1}>
           {pasta.name}
         </Text>
-        <Text style={[styles.italianName, { color: colors.textSecondary }]} numberOfLines={1}>
-          {pasta.italianName}
-        </Text>
 
         <View style={styles.footer}>
+          <RegionBadge region={pasta.region} size="small" />
+
           <DifficultyBadge difficulty={pasta.difficulty} size="small" />
         </View>
       </View>
@@ -58,43 +73,52 @@ const styles = StyleSheet.create({
   card: {
     width: CARD_WIDTH,
     borderRadius: BorderRadius.card,
-    overflow: 'hidden',
+    overflow: "hidden",
     marginBottom: Spacing.md,
   },
   imageContainer: {
-    width: '100%',
+    width: "100%",
     height: 120,
-    position: 'relative',
+    position: "relative",
   },
   image: {
-    width: '100%',
-    height: '100%',
+    width: "100%",
+    height: "100%",
   },
   completedBadge: {
-    position: 'absolute',
+    position: "absolute",
     top: Spacing.sm,
     right: Spacing.sm,
     width: 28,
     height: 28,
     borderRadius: 14,
-    alignItems: 'center',
-    justifyContent: 'center',
+    alignItems: "center",
+    justifyContent: "center",
   },
   content: {
     padding: Spacing.sm,
+    gap: Spacing.sm,
   },
   name: {
     fontSize: FontSize.base,
     fontFamily: FontFamily.secondary.semibold,
     marginBottom: 2,
   },
-  italianName: {
+  regionSection: {
+    flexDirection: "row",
+    gap: 4,
+    alignItems: "center",
+    marginBottom: 2,
+  },
+  regionName: {
     fontSize: FontSize.xs,
     fontFamily: FontFamily.secondary.regular,
     marginBottom: Spacing.sm,
   },
   footer: {
-    flexDirection: 'row',
-    alignItems: 'center',
+    flexDirection: "row",
+    alignItems: "center",
+    gap: Spacing.sm,
+    flexWrap: "wrap",
   },
 });
