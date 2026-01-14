@@ -47,7 +47,7 @@ export function PastaCard({ pasta }: PastaCardProps) {
         />
         {isCompleted && (
           <View
-            style={[styles.completedBadge, { backgroundColor: colors.success }]}
+            style={[styles.completedBadge, { backgroundColor: colors.primary }]}
           >
             <Ionicons name="checkmark" size={16} color="#FFFFFF" />
           </View>
@@ -74,6 +74,7 @@ const styles = StyleSheet.create({
     borderRadius: BorderRadius.card,
     overflow: "hidden",
     marginBottom: Spacing.md,
+    flex: 1,
   },
   imageContainer: {
     width: "100%",
