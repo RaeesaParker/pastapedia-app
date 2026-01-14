@@ -61,7 +61,6 @@ export function PastaCard({ pasta }: PastaCardProps) {
 
         <View style={styles.footer}>
           <RegionBadge region={pasta.region} size="small" />
-
           <DifficultyBadge difficulty={pasta.difficulty} size="small" />
         </View>
       </View>
@@ -116,9 +115,9 @@ const styles = StyleSheet.create({
     marginBottom: Spacing.sm,
   },
   footer: {
-    flexDirection: "row",
-    alignItems: "center",
+    flexDirection: "column",
+    alignItems: "flex-start",
     gap: Spacing.sm,
-    flexWrap: "wrap",
+    justifyContent: "center",
   },
 });

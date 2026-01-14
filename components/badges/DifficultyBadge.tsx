@@ -1,5 +1,6 @@
 import React from "react";
 import { View, Text, StyleSheet } from "react-native";
+import { Ionicons } from "@expo/vector-icons";
 import { Difficulty } from "../../types";
 import { Colors } from "../../constants/colors";
 import { BorderRadius, Spacing, FontSize, FontFamily } from "../../constants";
@@ -14,26 +15,33 @@ export function DifficultyBadge({
   size = "medium",
 }: DifficultyBadgeProps) {
   const difficultyConfig = {
-    beginner: { label: "Beginner", color: Colors.difficulty.beginner },
+    beginner: {
+      label: "Beginner",
+      color: "#2E7D32",
+    },
     intermediate: {
       label: "Intermediate",
-      color: Colors.difficulty.intermediate,
+      color: "#E65100",
     },
-    advanced: { label: "Advanced", color: Colors.difficulty.advanced },
+    advanced: {
+      label: "Advanced",
+      color: "#C62828",
+    },
   };
 
   const config = difficultyConfig[difficulty];
   const isSmall = size === "small";
 
   return (
-    <View
-      style={[
-        styles.badge,
-        { backgroundColor: config.color },
-        isSmall && styles.badgeSmall,
-      ]}
-    >
-      <Text style={[styles.text, isSmall && styles.textSmall]}>
+    <View style={[styles.badge, isSmall && styles.badgeSmall]}>
+      <Ionicons name="ellipse" size={isSmall ? 12 : 16} color={config.color} />
+      <Text
+        style={[
+          styles.text,
+          { color: config.color },
+          isSmall && styles.textSmall,
+        ]}
+      >
         {config.label}
       </Text>
     </View>
@@ -42,21 +50,19 @@ export function DifficultyBadge({
 
 const styles = StyleSheet.create({
   badge: {
-    borderRadius: BorderRadius.badge,
-    paddingVertical: Spacing.xs,
-    paddingHorizontal: Spacing.sm,
+    flexDirection: "row",
+    alignItems: "center",
+    gap: Spacing.xs,
     alignSelf: "flex-start",
   },
   badgeSmall: {
-    paddingVertical: Spacing.xs / 2,
-    paddingHorizontal: Spacing.sm,
+    gap: 4,
   },
   text: {
-    color: "#FFFFFF",
-    fontSize: FontSize.sm,
+    fontSize: FontSize.xs,
     fontFamily: FontFamily.tertiary.semibold,
   },
   textSmall: {
-    fontSize: FontSize.xs,
+    fontSize: 10,
   },
 });

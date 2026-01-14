@@ -1,12 +1,12 @@
-import React from 'react';
-import { View, Text, FlatList, StyleSheet } from 'react-native';
-import { Screen } from '../../components/layout/Screen';
-import { PastaCard } from '../../components/cards/PastaCard';
-import { useTheme } from '../../hooks/useTheme';
-import { usePasta } from '../../hooks/usePasta';
-import { Spacing, FontSize, FontFamily } from '../../constants';
+import React from "react";
+import { View, Text, FlatList, StyleSheet } from "react-native";
+import { Screen } from "../../components/layout/Screen";
+import { PastaCard } from "../../components/cards/PastaCard";
+import { useTheme } from "../../hooks/useTheme";
+import { usePasta } from "../../hooks/usePasta";
+import { Spacing, FontSize, FontFamily } from "../../constants";
 
-export default function BrowseScreen() {
+export default function ShapesScreen() {
   const { colors } = useTheme();
   const { filteredPastas } = usePasta();
 
@@ -15,7 +15,9 @@ export default function BrowseScreen() {
       <View style={styles.container}>
         {/* Header */}
         <View style={styles.header}>
-          <Text style={[styles.title, { color: colors.text }]}>Browse Pasta</Text>
+          <Text style={[styles.title, { color: colors.text }]}>
+            Browse Pasta
+          </Text>
         </View>
 
         {/* Pasta Grid */}
@@ -42,13 +44,13 @@ const styles = StyleSheet.create({
     marginBottom: Spacing.md,
   },
   title: {
-    fontSize: FontSize['3xl'],
+    fontSize: FontSize["3xl"],
     fontFamily: FontFamily.primary.bold,
   },
   listContent: {
     paddingBottom: Spacing.xl,
   },
   row: {
-    justifyContent: 'space-between',
+    justifyContent: "space-between",
   },
 });

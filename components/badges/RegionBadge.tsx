@@ -14,22 +14,16 @@ export function RegionBadge({ region, size = "medium" }: RegionBadgeProps) {
   const isSmall = size === "small";
 
   return (
-    <View
-      style={[
-        styles.badge,
-        { backgroundColor: colors.cardElevated, borderColor: colors.border },
-        isSmall && styles.badgeSmall,
-      ]}
-    >
+    <View style={[styles.badge, isSmall && styles.badgeSmall]}>
       <Ionicons
-        name="location-outline"
-        size={isSmall ? 14 : 16}
-        color={colors.primary}
+        name="location"
+        size={isSmall ? 12 : 16}
+        color={colors.primaryDark}
       />
       <Text
         style={[
           styles.text,
-          { color: colors.textSecondary },
+          { color: colors.primaryDark },
           isSmall && styles.textSmall,
         ]}
       >
@@ -43,19 +37,14 @@ const styles = StyleSheet.create({
   badge: {
     flexDirection: "row",
     alignItems: "center",
-    gap: 4,
-    borderRadius: BorderRadius.badge,
-    paddingVertical: Spacing.xs,
-    paddingHorizontal: Spacing.sm,
-    borderWidth: 1,
+    gap: Spacing.xs,
   },
   badgeSmall: {
-    paddingVertical: Spacing.xs / 2,
-    paddingHorizontal: Spacing.sm,
+    gap: 4,
   },
   text: {
     fontSize: FontSize.xs,
-    fontFamily: FontFamily.tertiary.medium,
+    fontFamily: FontFamily.tertiary.semibold,
   },
   textSmall: {
     fontSize: 10,

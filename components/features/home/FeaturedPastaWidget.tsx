@@ -35,7 +35,7 @@ export default function FeaturedPastaWidget() {
   return (
     <View style={[styles.container, { backgroundColor: colors.card }]}>
       <View style={[styles.badge, { backgroundColor: colors.accentLight }]}>
-        <Ionicons name="star" size={16} color={colors.primaryDark} />
+        <Ionicons name="sparkles" size={16} color={colors.primaryDark} />
         <Text style={[styles.badgeText, { color: colors.primaryDark }]}>
           Featured This Week
         </Text>
