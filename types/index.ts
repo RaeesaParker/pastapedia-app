@@ -1,21 +1,47 @@
-export type ThemeMode = 'light' | 'dark';
+export type ThemeMode = "light" | "dark";
 
-export type PastaType = 'long' | 'short' | 'filled' | 'sheet' | 'soup' | 'specialty';
+export type PastaType =
+  | "long"
+  | "short"
+  | "filled"
+  | "sheet"
+  | "soup"
+  | "specialty";
 
-export type Difficulty = 'beginner' | 'intermediate' | 'advanced';
+export type Difficulty = "beginner" | "intermediate" | "advanced";
 
 export type Region =
-  | 'Abruzzo' | 'Basilicata' | 'Calabria' | 'Campania'
-  | 'Emilia-Romagna' | 'Friuli-Venezia Giulia' | 'Lazio'
-  | 'Liguria' | 'Lombardy' | 'Marche' | 'Molise'
-  | 'Piedmont' | 'Puglia' | 'Sardinia' | 'Sicily'
-  | 'Tuscany' | 'Trentino-Alto Adige' | 'Umbria'
-  | 'Valle d\'Aosta' | 'Veneto';
+  | "Abruzzo"
+  | "Basilicata"
+  | "Calabria"
+  | "Campania"
+  | "Emilia-Romagna"
+  | "Friuli-Venezia Giulia"
+  | "Lazio"
+  | "Liguria"
+  | "Lombardy"
+  | "Marche"
+  | "Molise"
+  | "Piedmont"
+  | "Puglia"
+  | "Sardinia"
+  | "Sicily"
+  | "Tuscany"
+  | "Trentino-Alto Adige"
+  | "Umbria"
+  | "Valle d'Aosta"
+  | "Veneto";
 
 export type Equipment =
-  | 'Rolling Pin' | 'Pasta Machine' | 'Chitarra'
-  | 'Gnocchi Board' | 'Ravioli Stamp' | 'Ferretto'
-  | 'Fork' | 'Knife' | 'None';
+  | "Rolling Pin"
+  | "Pasta Machine"
+  | "Chitarra"
+  | "Gnocchi Board"
+  | "Ravioli Stamp"
+  | "Ferretto"
+  | "Fork"
+  | "Knife"
+  | "None";
 
 export interface PastaInstruction {
   stepNumber: number;
@@ -27,7 +53,7 @@ export interface PastaInstruction {
 export interface SaucePairing {
   name: string;
   description: string;
-  compatibility: 'excellent' | 'good' | 'acceptable';
+  compatibility: "excellent" | "good" | "acceptable";
 }
 
 export interface Recipe {
@@ -81,7 +107,7 @@ export interface Achievement {
   emoji: string;
   unlockedAt?: Date;
   requirement: {
-    type: 'count' | 'region' | 'difficulty' | 'type' | 'streak';
+    type: "count" | "region" | "difficulty" | "type";
     target: number | string;
   };
 }
@@ -95,8 +121,6 @@ export interface UserProgress {
     uniqueShapes: number;
     regionsCovered: number;
     favoriteRegion?: Region;
-    currentStreak: number;
-    longestStreak: number;
   };
 }
 

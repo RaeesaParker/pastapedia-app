@@ -1,19 +1,26 @@
-import { create } from 'zustand';
-import AsyncStorage from '@react-native-async-storage/async-storage';
-import { UserProgress, ProgressEntry, Achievement, Region } from '../types';
-import { ACHIEVEMENTS } from '../data/achievementsData';
-import { PASTA_DATABASE } from '../data/pastaData';
+import { create } from "zustand";
+import AsyncStorage from "@react-native-async-storage/async-storage";
+import { UserProgress, ProgressEntry, Region } from "../types";
+import { ACHIEVEMENTS } from "../data/achievementsData";
+import { PASTA_DATABASE } from "../data/pastaData";
 
-const PROGRESS_STORAGE_KEY = '@pastapedia_progress';
+const PROGRESS_STORAGE_KEY = "@pastapedia_progress";
 
 interface ProgressStore extends UserProgress {
   isLoaded: boolean;
 
   // Actions
   loadProgress: () => Promise<void>;
-  markPastaAsComplete: (pastaId: string, rating?: number, notes?: string) => Promise<void>;
+  markPastaAsComplete: (
+    pastaId: string,
+    rating?: number,
+    notes?: string
+  ) => Promise<void>;
   removePastaFromComplete: (pastaId: string) => Promise<void>;
-  updateProgressEntry: (pastaId: string, data: Partial<ProgressEntry>) => Promise<void>;
+  updateProgressEntry: (
+    pastaId: string,
+    data: Partial<ProgressEntry>
+  ) => Promise<void>;
   checkAndUnlockAchievements: () => void;
   calculateStats: () => void;
   saveProgress: () => Promise<void>;
@@ -22,13 +29,11 @@ interface ProgressStore extends UserProgress {
 const initialProgress: UserProgress = {
   completedPastas: [],
   progressEntries: [],
-  achievements: ACHIEVEMENTS.map(a => ({ ...a })),
+  achievements: ACHIEVEMENTS.map((a) => ({ ...a })),
   stats: {
     totalMade: 0,
     uniqueShapes: 0,
     regionsCovered: 0,
-    currentStreak: 0,
-    longestStreak: 0,
   },
 };
 
@@ -44,23 +49,27 @@ export const useProgressStore = create<ProgressStore>((set, get) => ({
         // Convert date strings back to Date objects
         parsed.progressEntries = parsed.progressEntries.map((entry: any) => ({
           ...entry,
-          completedAt: new Date(entry.completedAt)
+          completedAt: new Date(entry.completedAt),
         }));
         parsed.achievements = parsed.achievements.map((ach: any) => ({
           ...ach,
-          unlockedAt: ach.unlockedAt ? new Date(ach.unlockedAt) : undefined
+          unlockedAt: ach.unlockedAt ? new Date(ach.unlockedAt) : undefined,
         }));
         set({ ...parsed, isLoaded: true });
       } else {
         set({ isLoaded: true });
       }
     } catch (error) {
-      console.error('Error loading progress:', error);
+      console.error("Error loading progress:", error);
       set({ isLoaded: true });
     }
   },
 
-  markPastaAsComplete: async (pastaId: string, rating?: number, notes?: string) => {
+  markPastaAsComplete: async (
+    pastaId: string,
+    rating?: number,
+    notes?: string
+  ) => {
     const state = get();
 
     // Don't add duplicates
@@ -89,18 +98,23 @@ export const useProgressStore = create<ProgressStore>((set, get) => ({
     const state = get();
 
     set({
-      completedPastas: state.completedPastas.filter(id => id !== pastaId),
-      progressEntries: state.progressEntries.filter(e => e.pastaId !== pastaId),
+      completedPastas: state.completedPastas.filter((id) => id !== pastaId),
+      progressEntries: state.progressEntries.filter(
+        (e) => e.pastaId !== pastaId
+      ),
     });
 
     get().calculateStats();
     await get().saveProgress();
   },
 
-  updateProgressEntry: async (pastaId: string, data: Partial<ProgressEntry>) => {
+  updateProgressEntry: async (
+    pastaId: string,
+    data: Partial<ProgressEntry>
+  ) => {
     const state = get();
 
-    const updatedEntries = state.progressEntries.map(entry =>
+    const updatedEntries = state.progressEntries.map((entry) =>
       entry.pastaId === pastaId ? { ...entry, ...data } : entry
     );
 
@@ -110,46 +124,11 @@ export const useProgressStore = create<ProgressStore>((set, get) => ({
 
   calculateStats: () => {
     const state = get();
-    const completedPastas = PASTA_DATABASE.filter(p =>
+    const completedPastas = PASTA_DATABASE.filter((p) =>
       state.completedPastas.includes(p.id)
     );
 
-    const uniqueRegions = new Set(completedPastas.map(p => p.region));
-
-    // Calculate streak
-    const sortedEntries = [...state.progressEntries].sort(
-      (a, b) => b.completedAt.getTime() - a.completedAt.getTime()
-    );
-
-    let currentStreak = 0;
-    let longestStreak = 0;
-    let tempStreak = 0;
-    let lastDate: Date | null = null;
-
-    sortedEntries.forEach(entry => {
-      const entryDate = new Date(entry.completedAt);
-      entryDate.setHours(0, 0, 0, 0);
-
-      if (!lastDate) {
-        tempStreak = 1;
-        currentStreak = 1;
-      } else {
-        const dayDiff = Math.floor(
-          (lastDate.getTime() - entryDate.getTime()) / (1000 * 60 * 60 * 24)
-        );
-
-        if (dayDiff === 1) {
-          tempStreak++;
-          currentStreak = tempStreak;
-        } else if (dayDiff > 1) {
-          tempStreak = 1;
-          currentStreak = 0;
-        }
-      }
-
-      longestStreak = Math.max(longestStreak, tempStreak);
-      lastDate = entryDate;
-    });
+    const uniqueRegions = new Set(completedPastas.map((p) => p.region));
 
     // Find favorite region (most completed)
     const regionCounts = completedPastas.reduce((acc, pasta) => {
@@ -167,57 +146,55 @@ export const useProgressStore = create<ProgressStore>((set, get) => ({
         uniqueShapes: state.completedPastas.length,
         regionsCovered: uniqueRegions.size,
         favoriteRegion,
-        currentStreak,
-        longestStreak,
       },
     });
   },
 
   checkAndUnlockAchievements: () => {
     const state = get();
-    const updatedAchievements = state.achievements.map(achievement => {
+    const updatedAchievements = state.achievements.map((achievement) => {
       if (achievement.unlockedAt) return achievement;
 
       let isUnlocked = false;
 
       switch (achievement.requirement.type) {
-        case 'count':
-          isUnlocked = state.stats.uniqueShapes >= (achievement.requirement.target as number);
+        case "count":
+          isUnlocked =
+            state.stats.uniqueShapes >=
+            (achievement.requirement.target as number);
           break;
-        case 'region':
-          if (typeof achievement.requirement.target === 'number') {
-            isUnlocked = state.stats.regionsCovered >= achievement.requirement.target;
+        case "region":
+          if (typeof achievement.requirement.target === "number") {
+            isUnlocked =
+              state.stats.regionsCovered >= achievement.requirement.target;
           } else {
             // Specific region achievement
             const regionPastas = PASTA_DATABASE.filter(
-              p => p.region === achievement.requirement.target
+              (p) => p.region === achievement.requirement.target
             );
-            const completedInRegion = regionPastas.filter(p =>
+            const completedInRegion = regionPastas.filter((p) =>
               state.completedPastas.includes(p.id)
             );
             isUnlocked = completedInRegion.length === regionPastas.length;
           }
           break;
-        case 'difficulty':
+        case "difficulty":
           const difficultyPastas = PASTA_DATABASE.filter(
-            p => p.difficulty === achievement.requirement.target
+            (p) => p.difficulty === achievement.requirement.target
           );
-          const completedDifficulty = difficultyPastas.filter(p =>
+          const completedDifficulty = difficultyPastas.filter((p) =>
             state.completedPastas.includes(p.id)
           );
           isUnlocked = completedDifficulty.length === difficultyPastas.length;
           break;
-        case 'type':
+        case "type":
           const typePastas = PASTA_DATABASE.filter(
-            p => p.type === achievement.requirement.target
+            (p) => p.type === achievement.requirement.target
           );
-          const completedType = typePastas.filter(p =>
+          const completedType = typePastas.filter((p) =>
             state.completedPastas.includes(p.id)
           );
           isUnlocked = completedType.length === typePastas.length;
-          break;
-        case 'streak':
-          isUnlocked = state.stats.currentStreak >= (achievement.requirement.target as number);
           break;
       }
 
@@ -242,7 +219,7 @@ export const useProgressStore = create<ProgressStore>((set, get) => ({
     try {
       await AsyncStorage.setItem(PROGRESS_STORAGE_KEY, JSON.stringify(toSave));
     } catch (error) {
-      console.error('Error saving progress:', error);
+      console.error("Error saving progress:", error);
     }
   },
 }));

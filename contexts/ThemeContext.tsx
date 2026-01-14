@@ -1,8 +1,8 @@
-import React, { createContext, useContext, useEffect, useState } from 'react';
-import { useColorScheme } from 'react-native';
-import AsyncStorage from '@react-native-async-storage/async-storage';
-import { ThemeMode } from '../types';
-import { Colors } from '../constants/colors';
+import React, { createContext, useContext, useEffect, useState } from "react";
+import { useColorScheme } from "react-native";
+import AsyncStorage from "@react-native-async-storage/async-storage";
+import { ThemeMode } from "../types";
+import { Colors } from "../constants/colors";
 
 interface ThemeContextType {
   theme: ThemeMode;
@@ -13,11 +13,13 @@ interface ThemeContextType {
 
 const ThemeContext = createContext<ThemeContextType | undefined>(undefined);
 
-const THEME_STORAGE_KEY = '@pastapedia_theme';
+const THEME_STORAGE_KEY = "@pastapedia_theme";
 
 export function ThemeProvider({ children }: { children: React.ReactNode }) {
   const systemColorScheme = useColorScheme();
-  const [theme, setThemeState] = useState<ThemeMode>(systemColorScheme || 'light');
+  const [theme, setThemeState] = useState<ThemeMode>(
+    systemColorScheme || "light"
+  );
   const [isLoading, setIsLoading] = useState(true);
 
   // Load theme from storage on mount
@@ -28,11 +30,11 @@ export function ThemeProvider({ children }: { children: React.ReactNode }) {
   const loadTheme = async () => {
     try {
       const savedTheme = await AsyncStorage.getItem(THEME_STORAGE_KEY);
-      if (savedTheme && (savedTheme === 'light' || savedTheme === 'dark')) {
+      if (savedTheme && (savedTheme === "light" || savedTheme === "dark")) {
         setThemeState(savedTheme);
       }
     } catch (error) {
-      console.error('Error loading theme:', error);
+      console.error("Error loading theme:", error);
     } finally {
       setIsLoading(false);
     }
@@ -43,16 +45,16 @@ export function ThemeProvider({ children }: { children: React.ReactNode }) {
       await AsyncStorage.setItem(THEME_STORAGE_KEY, newTheme);
       setThemeState(newTheme);
     } catch (error) {
-      console.error('Error saving theme:', error);
+      console.error("Error saving theme:", error);
     }
   };
 
   const toggleTheme = () => {
-    const newTheme = theme === 'light' ? 'dark' : 'light';
+    const newTheme = theme === "light" ? "dark" : "light";
     setTheme(newTheme);
   };
 
-  const colors = theme === 'light' ? Colors.light : Colors.dark;
+  const colors = theme === "light" ? Colors.light : Colors.dark;
 
   if (isLoading) {
     return null; // Or a splash screen
@@ -68,7 +70,7 @@ export function ThemeProvider({ children }: { children: React.ReactNode }) {
 export function useTheme() {
   const context = useContext(ThemeContext);
   if (!context) {
-    throw new Error('useTheme must be used within ThemeProvider');
+    throw new Error("useTheme must be used within ThemeProvider");
   }
   return context;
 }
