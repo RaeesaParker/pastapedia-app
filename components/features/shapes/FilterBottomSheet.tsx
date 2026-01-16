@@ -81,16 +81,13 @@ export function FilterBottomSheet({
     value: T
   ) => {
     const current = tempFilters[category] as T[];
-    console.log("Toggling filter:", category, value, "Current:", current);
     const updated = current.includes(value)
       ? current.filter((v) => v !== value)
       : [...current, value];
-    console.log("Updated filters for", category, ":", updated);
     setTempFilters({ ...tempFilters, [category]: updated });
   };
 
   const toggleMultipleRegions = (regions: Region[]) => {
-    console.log("Toggling multiple regions:", regions);
     const current = tempFilters.regions;
     const anySelected = regions.some((r) => current.includes(r));
 
@@ -104,7 +101,6 @@ export function FilterBottomSheet({
       updated = [...current, ...newRegions];
     }
 
-    console.log("Updated regions:", updated);
     setTempFilters({ ...tempFilters, regions: updated });
   };
 
