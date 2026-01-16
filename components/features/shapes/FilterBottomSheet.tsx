@@ -61,6 +61,9 @@ export function FilterBottomSheet({
   const [showCompleted, setShowCompleted] = useState<
     "all" | "completed" | "notCompleted"
   >("all");
+  const [equipmentState, setEquipmentState] = useState<
+    Record<Equipment, "none" | "include" | "exclude">
+  >({} as Record<Equipment, "none" | "include" | "exclude">);
 
   const handleClearFilters = () => {
     setTempFilters({
@@ -68,9 +71,18 @@ export function FilterBottomSheet({
       difficulties: [],
       regions: [],
       equipment: [],
+      excludedEquipment: [],
       searchQuery: "",
     });
     setShowCompleted("all");
+    const newEquipmentState = {} as Record<
+      Equipment,
+      "none" | "include" | "exclude"
+    >;
+    EQUIPMENT_OPTIONS.forEach((eq) => {
+      newEquipmentState[eq] = "none";
+    });
+    setEquipmentState(newEquipmentState);
     Haptics.impactAsync(Haptics.ImpactFeedbackStyle.Light);
   };
 
@@ -90,6 +102,47 @@ export function FilterBottomSheet({
       : [...current, value];
     setTempFilters({ ...tempFilters, [category]: updated });
     Haptics.impactAsync(Haptics.ImpactFeedbackStyle.Light);
+  };
+
+  const toggleEquipmentFilter = (equipment: Equipment) => {
+    const currentState = getEquipmentState(equipment);
+    let newFilters = { ...tempFilters };
+
+    if (currentState === "none") {
+      // None -> Include
+      newFilters.equipment = [...tempFilters.equipment, equipment];
+      newFilters.excludedEquipment = tempFilters.excludedEquipment.filter(
+        (eq) => eq !== equipment
+      );
+    } else if (currentState === "include") {
+      // Include -> Exclude
+      newFilters.equipment = tempFilters.equipment.filter(
+        (eq) => eq !== equipment
+      );
+      newFilters.excludedEquipment = [
+        ...tempFilters.excludedEquipment,
+        equipment,
+      ];
+    } else {
+      // Exclude -> None
+      newFilters.equipment = tempFilters.equipment.filter(
+        (eq) => eq !== equipment
+      );
+      newFilters.excludedEquipment = tempFilters.excludedEquipment.filter(
+        (eq) => eq !== equipment
+      );
+    }
+
+    setTempFilters(newFilters);
+    Haptics.impactAsync(Haptics.ImpactFeedbackStyle.Light);
+  };
+
+  const getEquipmentState = (
+    equipment: Equipment
+  ): "none" | "include" | "exclude" => {
+    if (tempFilters.equipment.includes(equipment)) return "include";
+    if (tempFilters.excludedEquipment.includes(equipment)) return "exclude";
+    return "none";
   };
 
   const toggleMapVisibility = () => {
@@ -156,15 +209,48 @@ export function FilterBottomSheet({
 
             {/* Equipment Filter */}
             <FilterCategory title="BY EQUIPMENT">
-              <View style={styles.grid}>
-                {EQUIPMENT_OPTIONS.map((eq) => (
-                  <FilterChip
-                    key={eq}
-                    label={eq}
-                    selected={tempFilters.equipment.includes(eq)}
-                    onPress={() => toggleFilter("equipment", eq)}
+              <View style={styles.equipmentHeader}>
+                <Text
+                  style={[styles.helperText, { color: colors.textSecondary }]}
+                >
+                  Tap to cycle: Include → Exclude → Clear
+                </Text>
+              </View>
+              <View style={styles.equipmentLegend}>
+                <View style={styles.legendItem}>
+                  <Ionicons
+                    name="checkmark-circle"
+                    size={14}
+                    color={colors.primary}
                   />
-                ))}
+                  <Text
+                    style={[styles.legendText, { color: colors.textSecondary }]}
+                  >
+                    Must have
+                  </Text>
+                </View>
+                <View style={styles.legendItem}>
+                  <Ionicons name="close-circle" size={14} color="#D97757" />
+                  <Text
+                    style={[styles.legendText, { color: colors.textSecondary }]}
+                  >
+                    Must not have
+                  </Text>
+                </View>
+              </View>
+              <View style={styles.grid}>
+                {EQUIPMENT_OPTIONS.map((eq) => {
+                  const state = getEquipmentState(eq);
+                  return (
+                    <FilterChip
+                      key={eq}
+                      label={eq}
+                      selected={state === "include"}
+                      excluded={state === "exclude"}
+                      onPress={() => toggleEquipmentFilter(eq)}
+                    />
+                  );
+                })}
               </View>
             </FilterCategory>
 
@@ -284,6 +370,28 @@ const styles = StyleSheet.create({
     borderTopLeftRadius: 24,
     borderTopRightRadius: 24,
     maxHeight: "85%",
+  },
+  equipmentHeader: {
+    marginBottom: Spacing.sm,
+  },
+  helperText: {
+    fontSize: FontSize.xs,
+    fontFamily: FontFamily.tertiary.regular,
+    fontStyle: "italic",
+  },
+  equipmentLegend: {
+    flexDirection: "row",
+    gap: Spacing.md,
+    marginBottom: Spacing.md,
+  },
+  legendItem: {
+    flexDirection: "row",
+    alignItems: "center",
+    gap: Spacing.xs,
+  },
+  legendText: {
+    fontSize: FontSize.xs,
+    fontFamily: FontFamily.tertiary.regular,
   },
   header: {
     flexDirection: "row",

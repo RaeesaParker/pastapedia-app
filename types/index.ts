@@ -129,6 +129,7 @@ export interface FilterState {
   difficulties: Difficulty[];
   regions: Region[];
   equipment: Equipment[];
+  excludedEquipment: Equipment[];
   searchQuery: string;
 }
 

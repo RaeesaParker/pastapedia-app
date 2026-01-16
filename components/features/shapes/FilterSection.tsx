@@ -42,12 +42,19 @@ export default function FilterSection() {
     Haptics.impactAsync(Haptics.ImpactFeedbackStyle.Light);
   };
 
+  const removeExcludedEquipment = (value: string) => {
+    const current = filters.excludedEquipment;
+    setFilters({ ...filters, excludedEquipment: current.filter((v) => v !== value) });
+    Haptics.impactAsync(Haptics.ImpactFeedbackStyle.Light);
+  };
+
   const getActiveFilterCount = () => {
     return (
       filters.types.length +
       filters.difficulties.length +
       filters.regions.length +
-      filters.equipment.length
+      filters.equipment.length +
+      filters.excludedEquipment.length
     );
   };
 
@@ -137,6 +144,14 @@ export default function FilterSection() {
                 key={eq}
                 label={eq}
                 onRemove={() => removeActiveFilter("equipment", eq)}
+              />
+            ))}
+            {filters.excludedEquipment.map((eq) => (
+              <FilterTag
+                key={`excluded-${eq}`}
+                label={`Not ${eq}`}
+                excluded
+                onRemove={() => removeExcludedEquipment(eq)}
               />
             ))}
           </ScrollView>
