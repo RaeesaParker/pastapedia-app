@@ -57,7 +57,7 @@ export default function FeaturedPastaWidget() {
 
         <Button
           title="Learn More"
-          onPress={() => router.push(`/pasta/${featuredPasta.id}` as any)}
+          onPress={() => router.push(`/shapes/${featuredPasta.id}` as any)}
           variant="secondary"
           fullWidth
         />

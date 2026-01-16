@@ -35,7 +35,7 @@ export function PastaCard({ pasta }: PastaCardProps) {
 
   return (
     <TouchableOpacity
-      onPress={() => router.push(`/pasta/${pasta.id}` as any)}
+      onPress={() => router.push(`/shapes/${pasta.id}` as any)}
       style={[styles.card, { backgroundColor: colors.card }, Shadow.md]}
       activeOpacity={0.8}
     >

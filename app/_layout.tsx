@@ -55,7 +55,7 @@ export default function RootLayout() {
         <StatusBar style="auto" />
         <Stack screenOptions={{ headerShown: false }}>
           <Stack.Screen name="(tabs)" />
-          <Stack.Screen name="pasta/[id]" options={{ presentation: "card" }} />
+          <Stack.Screen name="shapes/[id]" options={{ presentation: "card" }} />
         </Stack>
       </ThemeProvider>
     </GestureHandlerRootView>
