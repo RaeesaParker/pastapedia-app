@@ -81,10 +81,31 @@ export function FilterBottomSheet({
     value: T
   ) => {
     const current = tempFilters[category] as T[];
+    console.log("Toggling filter:", category, value, "Current:", current);
     const updated = current.includes(value)
       ? current.filter((v) => v !== value)
       : [...current, value];
+    console.log("Updated filters for", category, ":", updated);
     setTempFilters({ ...tempFilters, [category]: updated });
+  };
+
+  const toggleMultipleRegions = (regions: Region[]) => {
+    console.log("Toggling multiple regions:", regions);
+    const current = tempFilters.regions;
+    const anySelected = regions.some((r) => current.includes(r));
+
+    let updated: Region[];
+    if (anySelected) {
+      // Remove all regions in the group
+      updated = current.filter((r) => !regions.includes(r));
+    } else {
+      // Add all regions in the group
+      const newRegions = regions.filter((r) => !current.includes(r));
+      updated = [...current, ...newRegions];
+    }
+
+    console.log("Updated regions:", updated);
+    setTempFilters({ ...tempFilters, regions: updated });
   };
 
   const toggleEquipmentFilter = (equipment: Equipment) => {
@@ -157,6 +178,7 @@ export function FilterBottomSheet({
               regions={REGIONS}
               selectedRegions={tempFilters.regions}
               onToggle={(region) => toggleFilter("regions", region)}
+              onToggleMultiple={toggleMultipleRegions}
             />
 
             <ShowOnlyFilter

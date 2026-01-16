@@ -5,6 +5,7 @@ import * as Haptics from "expo-haptics";
 import { useTheme } from "../../../../hooks/useTheme";
 import { FilterCategory } from "../FilterCategory";
 import { FilterChip } from "../FilterChip";
+import { ItalyMap } from "./ItalyMap";
 import { Region } from "../../../../types";
 import {
   Spacing,
@@ -17,12 +18,14 @@ interface RegionFilterProps {
   regions: Region[];
   selectedRegions: Region[];
   onToggle: (region: Region) => void;
+  onToggleMultiple: (regions: Region[]) => void;
 }
 
 export function RegionFilter({
   regions,
   selectedRegions,
   onToggle,
+  onToggleMultiple,
 }: RegionFilterProps) {
   const { colors } = useTheme();
   const [showMap, setShowMap] = useState(false);
@@ -53,19 +56,18 @@ export function RegionFilter({
       {showMap && (
         <View
           style={[
-            styles.mapPlaceholder,
+            styles.mapContainer,
             {
               backgroundColor: colors.card,
               borderColor: colors.border,
             },
           ]}
         >
-          <Text style={[styles.mapText, { color: colors.textSecondary }]}>
-            Interactive Italy Map
-          </Text>
-          <Text style={[styles.mapSubtext, { color: colors.textSecondary }]}>
-            Tap regions to filter
-          </Text>
+          <ItalyMap
+            selectedRegions={selectedRegions}
+            onToggle={onToggle}
+            onToggleMultiple={onToggleMultiple}
+          />
         </View>
       )}
 
@@ -94,22 +96,11 @@ const styles = StyleSheet.create({
     fontSize: FontSize.sm,
     fontFamily: FontFamily.tertiary.semibold,
   },
-  mapPlaceholder: {
-    height: 200,
+  mapContainer: {
     borderRadius: BorderRadius.card,
     borderWidth: 1,
-    alignItems: "center",
-    justifyContent: "center",
+    padding: Spacing.md,
     marginBottom: Spacing.md,
-  },
-  mapText: {
-    fontSize: FontSize.base,
-    fontFamily: FontFamily.tertiary.semibold,
-  },
-  mapSubtext: {
-    fontSize: FontSize.sm,
-    fontFamily: FontFamily.tertiary.regular,
-    marginTop: Spacing.xs,
   },
   grid: {
     flexDirection: "row",
