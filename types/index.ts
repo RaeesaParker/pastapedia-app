@@ -11,25 +11,12 @@ export type PastaType =
 export type Difficulty = "beginner" | "intermediate" | "advanced";
 
 export type Region =
-  | "Abruzzo"
-  | "Basilicata"
-  | "Calabria"
   | "Campania"
   | "Emilia-Romagna"
-  | "Friuli-Venezia Giulia"
-  | "Lazio"
   | "Liguria"
-  | "Lombardy"
-  | "Marche"
-  | "Molise"
   | "Piedmont"
   | "Puglia"
-  | "Sardinia"
-  | "Sicily"
   | "Tuscany"
-  | "Trentino-Alto Adige"
-  | "Umbria"
-  | "Valle d'Aosta"
   | "Veneto";
 
 export type Equipment =
